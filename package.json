@@ -1,6 +1,6 @@
 {
   "name": "graphql-tools-merge-typedefs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Dustin Callaway <drcallaway@gmail.com>",
   "license": "MIT",
   "description": "Merges GraphQL query, mutation, and subscription type definitions",
