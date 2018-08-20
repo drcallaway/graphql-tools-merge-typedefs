@@ -1,4 +1,4 @@
-import { mergeTypeDefs } from '../mergeTypeDefs';
+import { mergeTypeDefs } from '../src/mergeTypeDefs';
 
 test('query type defs are merged', () => {
   const queryDefs = [
