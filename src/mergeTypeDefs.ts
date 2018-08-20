@@ -62,4 +62,4 @@ function mergeTypeDefs(defs): ITypeDefinitions {
   return defs;
 }
 
-export { mergeTypeDefs };
+export { mergeTypeDefs, merge };
