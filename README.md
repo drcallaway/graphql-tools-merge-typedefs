@@ -91,7 +91,7 @@ const { mergeTypeDefs } = require('graphql-tools-merge-typedefs');
 
 const typeDefs = mergeTypeDefs([
   customerSchema.typeDefs,
-  orderSchema.typeDefs
+  orderSchema.typeDefs,
 ], 'Local');
 ...
 ```

@@ -44,7 +44,7 @@ test('all type defs are merged', () => {
       type Subscription {
         subscriptionFieldSet2: String
       }
-    `
+    `,
   ])
 
   snapshot(defs)
@@ -112,14 +112,11 @@ test('filters out falsy values', () => {
     `,
   ], 'Something')
 
-  // make sure the type is removed from each def except the last one
   snapshot(defs)
 })
 
 test('handles multiple types', () => {
   const defs: any = mergeTypeDefs([
-    false,
-    null,
     gql`
       type Local {
         field1: Int
@@ -141,6 +138,5 @@ test('handles multiple types', () => {
     `,
   ], [ 'Something', 'Local' ])
 
-  // make sure the type is removed from each def except the last one
   snapshot(defs)
 })
