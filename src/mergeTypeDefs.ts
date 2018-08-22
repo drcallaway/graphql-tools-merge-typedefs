@@ -61,13 +61,15 @@ function merge(defs: ITypeDefinitions, type: String): ITypeDefinitions {
  * Merges all query, mutation, and subscription type definitions.
  *
  * @param defs Type definitions to merge
+ * @param types any additonal types you want to target
  */
-function mergeTypeDefs(defs): ITypeDefinitions {
-  defs = merge(defs, 'Query');
-  defs = merge(defs, 'Mutation');
-  defs = merge(defs, 'Subscription');
-
-  return defs;
+function mergeTypeDefs(defs, types = []): ITypeDefinitions {
+  // handles strings and arrays of strings
+  // also always includes these base 3
+  types = [ 'Query', 'Mutation', 'Subscription'].concat(types)
+  return types.reduce((prev, next) => merge(prev, next), defs)
 }
 
+// export default as well so people can rename it to be what ever they want
+export default mergeTypeDefs;
 export { mergeTypeDefs, merge };

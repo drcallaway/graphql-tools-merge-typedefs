@@ -53,6 +53,23 @@ type Something {
 "
 `;
 
+exports[`handles multiple types 1`] = `
+"type Query {
+  something: Something
+}
+
+type Something {
+  field1: Int
+  field2: Int
+}
+
+type Local {
+  field1: Int
+  field2: Int
+}
+"
+`;
+
 exports[`multiple types in a def 1`] = `
 "type Fun {
   woohoo: String

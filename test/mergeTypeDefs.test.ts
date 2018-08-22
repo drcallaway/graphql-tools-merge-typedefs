@@ -51,7 +51,7 @@ test('all type defs are merged', () => {
 });
 
 test('two fields in the same type', () => {
-  const defs: any = merge([
+  const defs: any = mergeTypeDefs([
     gql`
       type Local {
         field1: String
@@ -70,7 +70,7 @@ test('two fields in the same type', () => {
 
 
 test('multiple types in a def', () => {
-  const defs: any = merge([
+  const defs: any = mergeTypeDefs([
     gql`
       type Fun {
         woohoo: String
@@ -95,8 +95,9 @@ test('multiple types in a def', () => {
   snapshot(defs)
 })
 
+
 test('filters out falsy values', () => {
-  const defs: any = merge([
+  const defs: any = mergeTypeDefs([
     false,
     null,
     gql`
@@ -110,6 +111,35 @@ test('filters out falsy values', () => {
       }
     `,
   ], 'Something')
+
+  // make sure the type is removed from each def except the last one
+  snapshot(defs)
+})
+
+test('handles multiple types', () => {
+  const defs: any = mergeTypeDefs([
+    false,
+    null,
+    gql`
+      type Local {
+        field1: Int
+      }
+      type Something {
+        field1: Int
+      }
+    `,
+    gql`
+      type Local {
+        field2: Int
+      }
+      type Something {
+        field2: Int
+      }
+      type Query {
+        something: Something
+      }
+    `,
+  ], [ 'Something', 'Local' ])
 
   // make sure the type is removed from each def except the last one
   snapshot(defs)
