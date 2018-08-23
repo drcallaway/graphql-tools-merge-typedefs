@@ -10,7 +10,7 @@ function merge(defs: ITypeDefinitions, type: String): ITypeDefinitions {
   let operations = [];
 
   defs = (defs as any).filter(def => {
-    const definitions = def.definitions.filter(definition => {
+    def.definitions = def.definitions.filter(definition => {
       const name = definition.name;
       if (definition.kind === 'ObjectTypeDefinition' && name.kind === 'Name' && name.value === type) {
         operations.push(definition);
@@ -20,7 +20,7 @@ function merge(defs: ITypeDefinitions, type: String): ITypeDefinitions {
       return true;
     });
 
-    if (definitions.length === 0) {
+    if (def.definitions.length === 0) {
       return false; // operation was the only definition so this can be removed
     }
 
