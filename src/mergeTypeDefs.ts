@@ -50,7 +50,7 @@ function merge(defs: ITypeDefinitions, type: String): ITypeDefinitions {
 
     (defs as any).push({
       kind: "Document",
-      definitions: [result],
+      definitions: [result]
     });
   }
 

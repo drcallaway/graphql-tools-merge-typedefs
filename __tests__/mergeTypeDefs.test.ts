@@ -14,11 +14,11 @@ test.each([ 'Query', 'Mutation', 'Subscription' ])('%s type defs are merged', (t
       type ${type} {
         ${type.toLowerCase()}Field2: String
       }
-    `,
-  ])
+    `
+  ]);
 
-  snapshot(defs)
-})
+  snapshot(defs);
+});
 
 
 test('all type defs are merged', () => {
@@ -44,10 +44,10 @@ test('all type defs are merged', () => {
       type Subscription {
         subscriptionFieldSet2: String
       }
-    `,
-  ])
+    `
+  ]);
 
-  snapshot(defs)
+  snapshot(defs);
 });
 
 test('two fields in the same type', () => {
@@ -62,11 +62,11 @@ test('two fields in the same type', () => {
       type Local {
         field1: Int
       }
-    `,
-  ], 'Local')
+    `
+  ], 'Local');
 
-  snapshot(defs)
-})
+  snapshot(defs);
+});
 
 
 test('multiple types in a def', () => {
@@ -87,13 +87,13 @@ test('multiple types in a def', () => {
       type Local {
         field3: Int
       }
-    `,
-  ], 'Local')
+    `
+  ], 'Local');
 
   // make sure the type is removed from each def except the last one
-  expect(defs.slice(0, -1).find((def) => def.definitions.find(({ name }) => name.value === 'Local'))).toBeFalsy()
-  snapshot(defs)
-})
+  expect(defs.slice(0, -1).find((def) => def.definitions.find(({ name }) => name.value === 'Local'))).toBeFalsy();
+  snapshot(defs);
+});
 
 
 test('filters out falsy values', () => {
@@ -109,11 +109,11 @@ test('filters out falsy values', () => {
       type Query {
         something: Something
       }
-    `,
-  ], 'Something')
+    `
+  ], 'Something');
 
-  snapshot(defs)
-})
+  snapshot(defs);
+});
 
 test('handles multiple types', () => {
   const defs: any = mergeTypeDefs([
@@ -135,8 +135,8 @@ test('handles multiple types', () => {
       type Query {
         something: Something
       }
-    `,
-  ], [ 'Something', 'Local' ])
+    `
+  ], [ 'Something', 'Local' ]);
 
-  snapshot(defs)
-})
+  snapshot(defs);
+});

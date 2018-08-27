@@ -39,17 +39,20 @@ And another schema definition file named `order-schema.js`:
 const { gql } = require('apollo-server');
 const ordersData = require('./json/orders.json');
 
-exports.typeDefs = gql`
+const order = gql`
   type Order {
     id: ID!
     product: String!
     quantity: Int!
   }
-
+`;
+const query = gql`
   type Query {
     order(id: ID!): Order
   }
 `;
+// you can also export an array of querys
+exports.typeDefs = [ order, query ]
 
 exports.resolvers = {
   Query: {
@@ -68,12 +71,12 @@ const orderSchema = require('./order-schema');
 // merge conflicting "Query", "Mutation", and "Subscription" definitions
 const typeDefs = mergeTypeDefs([
   customerSchema.typeDefs,
-  orderSchema.typeDefs,
+  ...orderSchema.typeDefs
 ]);
 
 const resolvers = [
   customerSchema.resolvers,
-  orderSchema.resolvers,
+  orderSchema.resolvers
 ];
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
@@ -91,7 +94,7 @@ const { mergeTypeDefs } = require('graphql-tools-merge-typedefs');
 
 const typeDefs = mergeTypeDefs([
   customerSchema.typeDefs,
-  orderSchema.typeDefs,
+  ...orderSchema.typeDefs
 ], 'Local');
 ...
 ```

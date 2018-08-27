@@ -41,7 +41,7 @@
       ".(ts|tsx)": "ts-jest"
     },
     "testMatch": [
-      "<rootDir>/test/**/*.test.{js,ts,tsx}"
+      "<rootDir>/__tests__/**/*.test.{js,ts,tsx}"
     ],
     "moduleFileExtensions": [
       "ts",
