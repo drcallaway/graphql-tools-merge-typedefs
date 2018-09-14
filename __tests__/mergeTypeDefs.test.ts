@@ -1,98 +1,142 @@
-import { mergeTypeDefs } from '../src/mergeTypeDefs';
+import gql from 'graphql-tag'
+import { snapshot } from './utils';
+import { mergeTypeDefs, merge } from '../src/mergeTypeDefs';
 
-test('query type defs are merged', () => {
-  const queryDefs = [
-    getTypeDef('Query', 'queryField1'), getTypeDef('Query', 'queryField2')
-  ];
 
-  const defs: any = mergeTypeDefs(queryDefs);
+test.each([ 'Query', 'Mutation', 'Subscription' ])('%s type defs are merged', (type) => {
+  const defs: any = mergeTypeDefs([
+    gql`
+      type ${type} {
+        ${type.toLowerCase()}Field1: String
+      }
+    `,
+    gql`
+      type ${type} {
+        ${type.toLowerCase()}Field2: String
+      }
+    `
+  ]);
 
-  expect(defs.length).toBe(1);
-  expect(defs[0].kind).toBe('Document');
-  expect(defs[0].definitions.length).toBe(1);
-  expect(defs[0].definitions[0].name.value).toBe('Query');
-  expect(defs[0].definitions[0].fields.length).toBe(2);
-  expect(defs[0].definitions[0].fields[0].name.value).toBe('queryField1');
-  expect(defs[0].definitions[0].fields[1].name.value).toBe('queryField2');
+  snapshot(defs);
 });
 
-test('mutation type defs are merged', () => {
-  const mutationDefs = [
-    getTypeDef('Mutation', 'mutationField1'), getTypeDef('Mutation', 'mutationField2')
-  ];
-
-  const defs: any = mergeTypeDefs(mutationDefs);
-
-  expect(defs.length).toBe(1);
-  expect(defs[0].kind).toBe('Document');
-  expect(defs[0].definitions.length).toBe(1);
-  expect(defs[0].definitions[0].name.value).toBe('Mutation');
-  expect(defs[0].definitions[0].fields.length).toBe(2);
-  expect(defs[0].definitions[0].fields[0].name.value).toBe('mutationField1');
-  expect(defs[0].definitions[0].fields[1].name.value).toBe('mutationField2');
-});
-
-test('subscription type defs are merged', () => {
-  const subscriptionDefs = [
-    getTypeDef('Subscription', 'subscriptionField1'),
-    getTypeDef('Subscription', 'subscriptionField2')
-  ];
-
-  const defs: any = mergeTypeDefs(subscriptionDefs);
-
-  expect(defs.length).toBe(1);
-  expect(defs[0].kind).toBe('Document');
-  expect(defs[0].definitions.length).toBe(1);
-  expect(defs[0].definitions[0].name.value).toBe('Subscription');
-  expect(defs[0].definitions[0].fields.length).toBe(2);
-  expect(defs[0].definitions[0].fields[0].name.value).toBe('subscriptionField1');
-  expect(defs[0].definitions[0].fields[1].name.value).toBe('subscriptionField2');
-});
 
 test('all type defs are merged', () => {
-  const allDefs = [
-    getTypeDef('Query', 'queryField1'),
-    getTypeDef('Query', 'queryField2'),
-    getTypeDef('Mutation', 'mutationField1'),
-    getTypeDef('Mutation', 'mutationField2'),
-    getTypeDef('Subscription', 'subscriptionField1'),
-    getTypeDef('Subscription', 'subscriptionField2')
-  ];
+  const defs: any = mergeTypeDefs([
+    gql`
+      type Query {
+        queryFieldSet1: String
+      }
+      type Mutation {
+        mutationFieldSet1: String
+      }
+      type Subscription {
+        subscriptionFieldSet1: String
+      }
+    `,
+    gql`
+      type Query {
+        queryFieldSet2: String
+      }
+      type Mutation {
+        mutationFieldSet2: String
+      }
+      type Subscription {
+        subscriptionFieldSet2: String
+      }
+    `
+  ]);
 
-  const defs: any = mergeTypeDefs(allDefs);
-
-  expect(defs.length).toBe(3);
-  expect(defs[0].kind).toBe('Document');
-  expect(defs[0].definitions.length).toBe(1);
-  expect(defs[0].definitions[0].fields.length).toBe(2);
-  expect(defs[0].definitions[0].fields[0].name.value).toBe('queryField1');
-  expect(defs[0].definitions[0].fields[1].name.value).toBe('queryField2');
-  expect(defs[1].definitions[0].fields[0].name.value).toBe('mutationField1');
-  expect(defs[1].definitions[0].fields[1].name.value).toBe('mutationField2');
-  expect(defs[2].definitions[0].fields[0].name.value).toBe('subscriptionField1');
-  expect(defs[2].definitions[0].fields[1].name.value).toBe('subscriptionField2');
+  snapshot(defs);
 });
 
-function getTypeDef(operationType: String, fieldName: String): Object {
-  return {
-    kind: 'Document',
-    definitions: [
-      {
-        kind: 'ObjectTypeDefinition',
-        name: {
-          kind: 'Name',
-          value: operationType
-        },
-        fields: [
-          {
-            kind: 'FieldDefinition',
-            name: {
-              kind: 'Name',
-              value: fieldName
-            }
-          }
-        ]
+test('two fields in the same type', () => {
+  const defs: any = mergeTypeDefs([
+    gql`
+      type Local {
+        field1: String
+        field2: String
       }
-    ]
-  };
-}
+    `,
+    gql`
+      type Local {
+        field1: Int
+      }
+    `
+  ], 'Local');
+
+  snapshot(defs);
+});
+
+
+test('multiple types in a def', () => {
+  const defs: any = mergeTypeDefs([
+    gql`
+      type Fun {
+        woohoo: String
+      }
+      type User {
+        id: String
+      }
+      type Local {
+        field1: User
+        field2: Fun
+      }
+    `,
+    gql`
+      type Local {
+        field3: Int
+      }
+    `
+  ], 'Local');
+
+  // make sure the type is removed from each def except the last one
+  expect(defs.slice(0, -1).find((def) => def.definitions.find(({ name }) => name.value === 'Local'))).toBeFalsy();
+  snapshot(defs);
+});
+
+
+test('filters out falsy values', () => {
+  const defs: any = mergeTypeDefs([
+    false,
+    null,
+    gql`
+      type Something {
+        field1: Int
+      }
+    `,
+    gql`
+      type Query {
+        something: Something
+      }
+    `
+  ], 'Something');
+
+  snapshot(defs);
+});
+
+test('handles multiple types', () => {
+  const defs: any = mergeTypeDefs([
+    gql`
+      type Local {
+        field1: Int
+      }
+      type Something {
+        field1: Int
+      }
+    `,
+    gql`
+      type Local {
+        field2: Int
+      }
+      type Something {
+        field2: Int
+      }
+      type Query {
+        something: Something
+      }
+    `
+  ], [ 'Something', 'Local' ]);
+
+  snapshot(defs);
+});

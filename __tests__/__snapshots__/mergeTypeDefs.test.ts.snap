@@ -1,0 +1,96 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mutation type defs are merged 1`] = `
+"type Mutation {
+  mutationField1: String
+  mutationField2: String
+}
+"
+`;
+
+exports[`Query type defs are merged 1`] = `
+"type Query {
+  queryField1: String
+  queryField2: String
+}
+"
+`;
+
+exports[`Subscription type defs are merged 1`] = `
+"type Subscription {
+  subscriptionField1: String
+  subscriptionField2: String
+}
+"
+`;
+
+exports[`all type defs are merged 1`] = `
+"type Query {
+  queryFieldSet1: String
+  queryFieldSet2: String
+}
+
+type Mutation {
+  mutationFieldSet1: String
+  mutationFieldSet2: String
+}
+
+type Subscription {
+  subscriptionFieldSet1: String
+  subscriptionFieldSet2: String
+}
+"
+`;
+
+exports[`filters out falsy values 1`] = `
+"type Query {
+  something: Something
+}
+
+type Something {
+  field1: Int
+}
+"
+`;
+
+exports[`handles multiple types 1`] = `
+"type Query {
+  something: Something
+}
+
+type Something {
+  field1: Int
+  field2: Int
+}
+
+type Local {
+  field1: Int
+  field2: Int
+}
+"
+`;
+
+exports[`multiple types in a def 1`] = `
+"type Fun {
+  woohoo: String
+}
+
+type User {
+  id: String
+}
+
+type Local {
+  field1: User
+  field2: Fun
+  field3: Int
+}
+"
+`;
+
+exports[`two fields in the same type 1`] = `
+"type Local {
+  field2: String
+  field1: Int
+}
+"
+`;
