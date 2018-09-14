@@ -71,7 +71,7 @@ const orderSchema = require('./order-schema');
 // merge conflicting "Query", "Mutation", and "Subscription" definitions
 const typeDefs = mergeTypeDefs([
   customerSchema.typeDefs,
-  ...orderSchema.typeDefs
+  orderSchema.typeDefs
 ]);
 
 const resolvers = [
@@ -94,7 +94,7 @@ const { mergeTypeDefs } = require('graphql-tools-merge-typedefs');
 
 const typeDefs = mergeTypeDefs([
   customerSchema.typeDefs,
-  ...orderSchema.typeDefs
+  orderSchema.typeDefs
 ], 'Local');
 ...
 ```
