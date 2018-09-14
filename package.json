@@ -1,6 +1,6 @@
 {
   "name": "graphql-tools-merge-typedefs",
-  "version": "1.0.3",
+  "version": "2.0.1",
   "author": "Dustin Callaway <drcallaway@gmail.com>",
   "license": "MIT",
   "description": "Merges GraphQL query, mutation, and subscription type definitions",
@@ -15,7 +15,7 @@
     "lint": "tslint src/*.ts* src/**/*.ts*",
     "test": "jest",
     "prepublish": "yarn lint && yarn test && yarn build",
-    "deploy": "yarn publish && git push --follow-tags --no-verify"
+    "deploy": "yarn publish && git add . && git push --follow-tags --no-verify"
   },
   "keywords": [
     "graphql",
